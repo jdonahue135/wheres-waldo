@@ -10,7 +10,6 @@ exports.highScores_List = function (req, res) {
 };
 
 exports.highScore_post = function (req, res) {
-  console.log(req.body);
   HighScore.find({}, "").exec(function (err, theScores) {
     if (err) {
       return next(err);
@@ -18,7 +17,6 @@ exports.highScore_post = function (req, res) {
     theScores.sort(sortHighScores);
     theScores[4].name = req.body.name;
     theScores[4].seconds = req.body.seconds;
-    console.log(theScores[4]);
     HighScore.findByIdAndUpdate(theScores[4].id, theScores[4]).exec(function (
       err,
       theScore

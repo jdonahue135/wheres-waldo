@@ -54,7 +54,6 @@ class App extends React.Component {
       this.state.foundCharacters.length === 5 &&
       this.state.gameStatus === true
     ) {
-      console.log("winner!");
       fetch("/endTime")
         .then((res) => res.json())
         .then((res) =>
@@ -191,8 +190,6 @@ class App extends React.Component {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: this.state.playerName, seconds: seconds }),
     };
-
-    console.log(requestOptions.body);
 
     fetch("/highScores", requestOptions)
       .then((res) => res.json())
