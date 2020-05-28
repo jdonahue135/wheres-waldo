@@ -31,7 +31,7 @@ class App extends React.Component {
       .then((res) => this.setState({ startTime: res }));
   }
 
-  componentDidUpdate(prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (
       !this.state.gameStatus &&
       this.state.gameStatus !== prevState.gameStatus
@@ -192,7 +192,11 @@ class App extends React.Component {
       body: JSON.stringify({ name: this.state.playerName, seconds: seconds }),
     };
 
-    fetch("/highScores", requestOptions);
+    console.log(requestOptions.body);
+
+    fetch("/highScores", requestOptions)
+      .then((res) => res.json())
+      .then((res) => console.log(res));
     this.setState({ showPrompt: false });
   }
 
