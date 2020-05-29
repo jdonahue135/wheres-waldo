@@ -1,12 +1,10 @@
 import React from "react";
-import "../App.css";
+import { sortHighScores } from "../helpers";
 
 import Timer from "./Timer";
 import Prompt from "./Prompt";
 import GameImage from "./GameImage";
 import Selector from "./Selector";
-
-import { sortHighScores } from "../helpers";
 import LeaderBoard from "./LeaderBoard";
 
 class App extends React.Component {
@@ -22,6 +20,7 @@ class App extends React.Component {
       startTime: null,
       endTime: null,
       showPrompt: false,
+      highScore: false,
       playerName: null,
       highScores: null,
       showLeaderboard: false,
@@ -40,20 +39,6 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    //this will be called after below function that gets endTime from the API
-    if (
-      !this.state.gameStatus &&
-      this.state.gameStatus !== prevState.gameStatus
-    ) {
-      //user found all characters, check if new high score. Only do this once
-      const finishTime = Math.floor(
-        (this.state.endTime[0] - this.state.startTime[0]) / 1000
-      );
-      finishTime < this.state.highScores[4].seconds
-        ? this.handleHighScore()
-        : console.log("not a high score");
-    }
-
     if (
       this.state.foundCharacters.length === 5 &&
       this.state.gameStatus === true
@@ -67,6 +52,20 @@ class App extends React.Component {
             gameStatus: false,
           })
         );
+    }
+
+    //this will be called after above function gets endTime from the API
+    if (
+      !this.state.gameStatus &&
+      this.state.gameStatus !== prevState.gameStatus
+    ) {
+      //user found all characters, check if new high score. Only do this once
+      const finishTime = Math.floor(
+        (this.state.endTime[0] - this.state.startTime[0]) / 1000
+      );
+      finishTime < this.state.highScores[4].seconds
+        ? this.handleHighScore()
+        : this.setState({ showPrompt: true });
     }
 
     //this is called after handleSelectChange
@@ -135,7 +134,10 @@ class App extends React.Component {
 
   handleHighScore() {
     //prompt for name
-    this.setState({ showPrompt: true });
+    this.setState({
+      showPrompt: true,
+      highScore: true,
+    });
   }
 
   handlePromptChange = (e) => {
@@ -164,13 +166,21 @@ class App extends React.Component {
       .then((res) =>
         this.setState({
           showPrompt: false,
+          showLeaderboard: true,
           highScores: res,
         })
       );
   }
 
   toggleLeaderboard() {
-    this.setState({ showLeaderboard: !this.state.showLeaderboard });
+    if (this.state.showLeaderboard) {
+      window.location.reload();
+      return false;
+    }
+    this.setState({
+      showLeaderboard: true,
+      showPrompt: false,
+    });
   }
 
   render() {
@@ -180,16 +190,14 @@ class App extends React.Component {
           show={this.state.showPrompt}
           onChange={this.handlePromptChange.bind(this)}
           onSubmit={this.handlePromptSubmit.bind(this)}
+          onClick={this.toggleLeaderboard.bind(this)}
         />
+        <header className="App-header">
+          <h1>Where's Wal'doh!</h1>
+          <h2>Find The Simpsons Family (Standard character versions only)</h2>
+        </header>
         {!this.state.showLeaderboard ? (
-          <header className="App-header">
-            {!this.state.gameStatus ? (
-              <div onClick={this.toggleLeaderboard.bind(this)}>
-                View Leaderboard
-              </div>
-            ) : (
-              <div></div>
-            )}
+          <div className="App">
             <Timer timerStatus={this.state.gameStatus} />
             <div className="photo-container">
               {this.state.pointerX ? (
@@ -198,7 +206,7 @@ class App extends React.Component {
                   y={this.state.pointerY}
                   onChange={this.handleSelectChange}
                   foundCharacters={this.state.foundCharacters}
-                ></Selector>
+                />
               ) : (
                 <div></div>
               )}
@@ -211,7 +219,7 @@ class App extends React.Component {
               )}
               <GameImage onClick={this.handleClick} />
             </div>
-          </header>
+          </div>
         ) : (
           <LeaderBoard
             scores={this.state.highScores}
