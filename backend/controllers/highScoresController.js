@@ -25,7 +25,7 @@ exports.highScore_post = function (req, res) {
         res.json("high score not posted");
         return next(err);
       } else {
-        res.json("high score posted");
+        res.json(theScores);
       }
     });
   });
