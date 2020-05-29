@@ -6,4 +6,11 @@ const sortHighScores = (a, b) => {
   }
 };
 
-export { sortHighScores };
+const formatTime = (seconds) => {
+  let secondsValue = seconds % 60;
+  secondsValue = secondsValue < 10 ? "0" + secondsValue : secondsValue;
+  const minutes = Math.floor(seconds / 60);
+  return minutes + ":" + secondsValue;
+};
+
+export { sortHighScores, formatTime };
