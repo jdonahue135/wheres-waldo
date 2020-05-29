@@ -66,13 +66,11 @@ class App extends React.Component {
       const finishTime = Math.floor(
         (this.state.endTime[0] - this.state.startTime[0]) / 1000
       );
+      console.log(finishTime);
+      console.log(this.state.highScores[4]);
       finishTime < this.state.highScores[4].seconds
-        ? this.setState({ highScore: true })
+        ? this.handleHighScore()
         : this.setState({ showPrompt: true });
-    }
-
-    if (this.state.highScore) {
-      this.setState({ showPrompt: true });
     }
 
     //this is called after handleSelectChange
@@ -139,6 +137,14 @@ class App extends React.Component {
     );
   }
 
+  handleHighScore() {
+    //prompt for name
+    this.setState({
+      showPrompt: true,
+      highScore: true,
+    });
+  }
+
   handlePromptChange = (e) => {
     this.setState({ playerName: e.target.value });
   };
@@ -167,7 +173,6 @@ class App extends React.Component {
           showPrompt: false,
           showLeaderboard: true,
           highScores: res,
-          highScore: false,
         })
       )
       .catch((err) => console.log(err));
