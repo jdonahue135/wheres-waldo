@@ -66,11 +66,15 @@ class App extends React.Component {
       const finishTime = Math.floor(
         (this.state.endTime[0] - this.state.startTime[0]) / 1000
       );
-      console.log(finishTime);
-      console.log(this.state.highScores[4]);
       finishTime < this.state.highScores[4].seconds
         ? this.handleHighScore()
         : this.setState({ showPrompt: true });
+    }
+
+    if (this.state.highScore && this.state.highScore !== prevState.highScore) {
+      this.setState({
+        showPrompt: true,
+      });
     }
 
     //this is called after handleSelectChange
@@ -140,7 +144,6 @@ class App extends React.Component {
   handleHighScore() {
     //prompt for name
     this.setState({
-      showPrompt: true,
       highScore: true,
     });
   }
