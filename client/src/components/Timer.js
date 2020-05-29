@@ -1,5 +1,7 @@
 import React from "react";
 
+import { formatTime } from "../helpers";
+
 class Timer extends React.Component {
   constructor(props) {
     super(props);
@@ -25,11 +27,8 @@ class Timer extends React.Component {
   }
 
   render() {
-    let seconds = this.state.seconds % 60;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-    const minutes = Math.floor(this.state.seconds / 60);
-    const timeString = minutes + ":" + seconds;
-    return <div>{timeString}</div>;
+    const timeString = formatTime(this.state.seconds);
+    return <div className="timer">{timeString}</div>;
   }
 }
 
