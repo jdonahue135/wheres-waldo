@@ -30,12 +30,14 @@ class App extends React.Component {
   componentDidMount() {
     fetch("/startTime")
       .then((res) => res.json())
-      .then((res) => this.setState({ startTime: res }));
+      .then((res) => this.setState({ startTime: res }))
+      .catch((err) => console.log(err));
 
     fetch("/highScores")
       .then((res) => res.json())
       .then((res) => res.sort(sortHighScores))
-      .then((highScores) => this.setState({ highScores }));
+      .then((highScores) => this.setState({ highScores }))
+      .catch((err) => console.log(err));
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -51,7 +53,8 @@ class App extends React.Component {
             endTime: res,
             gameStatus: false,
           })
-        );
+        )
+        .catch((err) => console.log(err));
     }
 
     //this will be called after above function gets endTime from the API
@@ -169,7 +172,8 @@ class App extends React.Component {
           showLeaderboard: true,
           highScores: res,
         })
-      );
+      )
+      .catch((err) => console.log(err));
   }
 
   toggleLeaderboard() {
